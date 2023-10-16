@@ -58,7 +58,7 @@
                                     class="rounded-md shadow-md overflow-hidden h-full w-full"
                                 >
                                     <img
-                                        src="test.jpg"
+                                        src="@/assets/image/silogo.png"
                                         alt=""
                                         width="w-13 h-16"
                                     />

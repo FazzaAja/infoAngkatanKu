@@ -1,23 +1,13 @@
 import {
   mdiAccountCircle,
   mdiMonitor,
-  mdiGithub,
-  mdiLock,
-  mdiAlertCircle,
-  mdiSquareEditOutline,
-  mdiTable,
-  mdiViewList,
-  mdiTelevisionGuide,
-  mdiResponsive,
-  mdiPalette,
-  mdiReact,
+  mdiBook,
   mdiHandCoin,
   mdiHistory,
-  mdiEvernote,
-  mdiAlertPlus,
-  mdiAlarm,
-  mdiMail,
+  mdiAccount,
+  mdiNewspaper,
   mdiMailbox,
+  mdiChartBox,
 } from "@mdi/js";
 
 export default [
@@ -27,38 +17,75 @@ export default [
     label: "Dashboard",
   },
   {
-    label: "Mahasiwa",
+    label: "Siswa",
     icon: mdiAccountCircle,
     menu: [
       {
-        to: "/admin/mahasiswa",
-        label: "List Mahasiswa",
+        to: "/admin/siswa",
+        label: "List Siswa",
       },
       {
-        to: "/admin/mahasiswa/tambah",
-        label: "Tambah Mahasiswa  ",
+        to: "/admin/siswa/tambah",
+        label: "Tambah Siswa  ",
       },
     ],
   },
   {
-    to: "/admin/payment",
-    label: "Pembayaran",
-    icon: mdiHandCoin,
+    label: "Ebook",
+    icon: mdiBook,
+    menu: [
+      {
+        to: "/admin/ebook",
+        label: "List Ebook",
+      },
+      {
+        to: "/admin/ebook/tambah",
+        label: "Tambah Ebook  ",
+      },
+    ],
   },
   {
-    to: "/admin/activity",
-    label: "Activity",
+    to: "/admin/aktivitas",
+    label: "Aktivitas",
     icon: mdiHistory,
   },
   {
-    to: "/admin/event",
-  label: "Event",
-    icon: mdiAlarm,
+    to: "/admin/berita",
+  label: "Berita",
+    icon: mdiNewspaper,
+  },
+  {
+    label: "User",
+    icon: mdiAccount,
+    menu: [
+      {
+        to: "/admin/user",
+        label: "List User",
+      },
+      {
+        to: "/admin/user/tambah",
+        label: "Tamabah User",
+      },
+    ],
   },
   {
     to: "/admin/masukan",
     label: "Masukan",
     icon: mdiMailbox,
+  },
+  {
+    label: "Data Master",
+    icon: mdiChartBox,
+    menu: [
+      {
+        to: "/admin/datamaster/jurusan",
+        label: "Jurusan",
+      },
+      {
+        to: "/admin/datamaster/kelas",
+        label: "Kelas   ",
+      },
+    ],
   },
  
   

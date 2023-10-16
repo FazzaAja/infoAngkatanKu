@@ -26,14 +26,19 @@
                 <tr v-for="data,i in masukan" :key="data.id">
 
                     <td data-label="no">{{ i+1 }}</td>
-                    <td data-label="npm">{{ data.nama }}</td>                
-                    <td data-label="nama">{{ data.desc }}</td>                 
+                    <td data-label="Dari">{{ data.nama }}</td>                
+                    <td data-label="Pesan">{{ data.desc }}</td>                 
 
                     <td class="before:hidden lg:w-1 whitespace-nowrap ">
                       <div class="flex gap-3">
-
-                        <NuxtLink class="py-1 px-1.5 rounded-md border "  :to="`/admin/masukan/`+data.id" >detail</NuxtLink>
-                        <button @click="deleteMasukan(data.id)">delete</button>
+                        <BaseButtons type="justify-start lg:justify-end" no-wrap>
+                              <BaseButton
+                              color="danger"
+                              :icon="mdiTrashCan"
+                              small
+                              @click="deleteMasukan(data.id)"
+                              />
+                          </BaseButtons>
                       </div>
                     </td>
                 </tr>
@@ -48,6 +53,7 @@
 
 
 <script setup>
+import { mdiTrashCan } from '@mdi/js';
 const supabase = useSupabaseClient()
 const masukan = ref([])
 const loading = ref(false)

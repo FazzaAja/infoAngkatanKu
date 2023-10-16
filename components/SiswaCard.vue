@@ -2,24 +2,24 @@
 
 const supabase = useSupabaseClient()
 
-const mahasiswa = ref();
+const siswa = ref();
 const $route = useRoute();
 
-const getSingleMahasiswa = async()=>{
-    const {data,error} = await supabase.from("mahasiswa").select().eq('id',$route.params.id)
-    mahasiswa.value = data
+const getSinglesiswa = async()=>{
+    const {data,error} = await supabase.from("siswa").select().eq('id',$route.params.id)
+    siswa.value = data
     if(error){
         console.log(error)
     }
 }
 
 onMounted(()=>{
-    getSingleMahasiswa()
+    getSinglesiswa()
 })
 </script>
 
 <template>
-  <CardBox v-for="data in mahasiswa" :key="data.id">
+  <CardBox v-for="data in siswa" :key="data.id">
     <BaseLevel type="justify-around lg:justify-center h-full">
       <img :src="data.foto" 
       class=" block h-full min-w-[300px] bg-clip-content  max-w-full bg-gray-100 dark:bg-slate-800 lg:mx-12"

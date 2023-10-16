@@ -5,7 +5,7 @@ import { darkModeKey, styleKey } from "@/config.js";
 
 useHead({
   titleTemplate: (titleChunk) => {
-    const titleBase = "Information System";
+    const titleBase = "InfoAngkatanku";
 
     return titleChunk ? `${titleChunk} - ${titleBase}` : titleBase;
   },

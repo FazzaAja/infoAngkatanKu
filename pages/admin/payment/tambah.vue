@@ -74,7 +74,7 @@ const reset = async ()=>{
        
           <div>
             <BaseButtons>
-              <button type="submit" class="py-2 px-5 bg-sky-600 rounded-md text-white hover:bg-sky-500">Tambah</button>
+              <button type="submit" class="py-2 px-5 bg-blue-500 rounded-md text-white hover:bg-sky-500">Tambah</button>
               <BaseButton @click="reset" color="info" outline label="Reset" />
             </BaseButtons>
           </div>

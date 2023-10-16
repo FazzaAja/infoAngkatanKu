@@ -2,25 +2,26 @@
 definePageMeta({
   middleware: 'auth'
 })
-import {mdiTrashCan,mdiEye} from "@mdi/js";
-const activity = ref([]);
+import {mdiTrashCan,mdiEye,mdiDownload} from "@mdi/js";
+const berita = ref([]);
 const loading = ref(false)
 const supabase = useSupabaseClient();
-const getActivity = async ()=>{
+const getBerita = async ()=>{
   loading.value = false
     const { data, error } = await supabase
-    .from('activity')
+    .from('berita')
     .select()
+    .eq('is_delete', 0)
     .order('id', { ascending: false })
-    activity.value = data
+    berita.value = data
     loading.value = true
 }
-const deleteActvity = async (id)=>{
+const deleteBerita = async (id)=>{
   if(confirm('Yakin ingin menghapus data?')){
 
     const { data, error } = await supabase
-    .from('activity')
-    .delete()
+    .from('berita')
+    .update({ is_deleted: 1 })
     .match({ id: id })
 
   }
@@ -28,10 +29,25 @@ const deleteActvity = async (id)=>{
     alert('data tidak jadi dihapus')
     
   }
-  getActivity()
+  getBerita()
 }
+
+const downloadImage = (imageUrl) => {
+ 
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = imageUrl; // Gunakan URL gambar sebagai tautan unduhan
+  a.download = "Screenshot from 2023-10-11 20-02-45.png"; // Ganti dengan nama gambar yang sesuai
+  document.body.appendChild(a);
+
+
+  a.click();
+
+  document.body.removeChild(a);
+};
+
 onMounted(()=>{
-    getActivity()
+    getBerita()
 })
 
 </script>
@@ -39,8 +55,8 @@ onMounted(()=>{
 <template>
   <NuxtLayout name="authenticated">
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiTableBorder" title="activity" main>
-        <NuxtLink to="/admin/activity/tambah" class="rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-950 py-2.5 px-3">Tambah activity</NuxtLink>
+      <SectionTitleLineWithButton :icon="mdiTableBorder" title="Berita" main>
+        <NuxtLink to="/admin/berita/tambah" class="rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-950 py-2.5 px-3">Tambah Berita</NuxtLink>
       </SectionTitleLineWithButton>
     
       <CardBox class="mb-6 " has-table>
@@ -49,9 +65,10 @@ onMounted(()=>{
 
                 <tr>
                     <th>No</th>
-                    <th>Title</th>
+                    <th>Judul</th>
                     <th>Foto</th>
                     <th>Desc</th>
+                    <th>dwonload img</th>
                     <th>action</th>
                 </tr>
             </thead>
@@ -63,20 +80,25 @@ onMounted(()=>{
                         </div>
                     </td>
                 </tr>
-                <tr  v-for="data,i in activity" :key="data.id">
+                <tr  v-for="data,i in berita" :key="data.id">
 
                     <td data-label="no">{{ i+1 }}</td>
-                    <td data-label="Judul">{{ data.title }}</td>
+                    <td data-label="Judul">{{ data.judul }}</td>
                    
                     <td>
-                      <img :src="data.image" alt="" class="md:w-[200px] md:h-[150px] max-w-full w-full h-[100%]">
+                      <img :src="data.foto" alt="" class="md:w-[200px] md:h-[150px] max-w-full w-full h-[100%]">
                     </td>
                     <td data-label="desc">{{ data.desc }}</td>
-                   
-                    <td class="before:hidden lg:w-1 whitespace-nowrap">
-                      <div class="md:flex md:justify-center md:gap-3">
+                    <td data-label="dwonload">  
+                    <a @click="downloadImage(data.foto)">
+                      <BaseButton color="danger" :icon="mdiDownload" small />
+                    </a>
+                  </td>
 
-                        <NuxtLink :to="`/admin/activity/`+data.id" >
+                    <td class="before:hidden lg:w-1 whitespace-nowrap">
+                      <div class="flex md:justify-center gap-3">
+
+                        <NuxtLink :to="`/admin/berita/`+data.id" >
                           <BaseButton
                               color="danger"
                               :icon="mdiEye"
@@ -89,7 +111,7 @@ onMounted(()=>{
                               color="danger"
                               :icon="mdiTrashCan"
                               small
-                              @click="deleteActvity(data.id)"
+                              @click="deleteBerita(data.id)"
                               />
                           </BaseButtons>
                       </div>

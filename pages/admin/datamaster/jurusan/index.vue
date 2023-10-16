@@ -1,8 +1,8 @@
 <template>
     <NuxtLayout name="authenticated">
       <SectionMain>
-        <SectionTitleLineWithButton :icon="mdiAccount" main  title="user" >
-            <NuxtLink to="/admin/user/tambah" class="rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-950 py-2.5 px-3">Tambah user</NuxtLink>
+        <SectionTitleLineWithButton :icon="mdiAccount" main  title="Jurusan" >
+            <NuxtLink to="/admin/datamaster/jurusan/tambah" class="rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-950 py-2.5 px-3">Tambah Jurusan</NuxtLink>
     
         </SectionTitleLineWithButton>
       
@@ -12,7 +12,7 @@
   
                   <tr>
                       <th>No</th>
-                      <th>Nama user</th>                 
+                      <th>Nama Jurusan</th>                 
                     
                       <th>Action</th>
                   </tr>
@@ -25,21 +25,28 @@
                           </div>
                       </td>
                   </tr>
-                  <tr v-for="data,i in users.users" :key="i">
+                  <tr v-for="data,i in masukan" :key="data.id">
   
                       <td data-label="no">{{ i+1 }}</td>
-                      <td data-label="email">{{ data.email }}</td>                
+                      <td data-label="nama">{{ data.nama }}</td>                
                                      
   
                       <td class="before:hidden lg:w-1 whitespace-nowrap ">
                         <div class="flex gap-3">
-                            
+                            <NuxtLink :to="`/admin/datamaster/jurusan/`+data.id" >
+                          <BaseButton
+                              color="danger"
+                              :icon="mdiEye"
+                              small
+                              
+                              />
+                        </NuxtLink>
                           <BaseButtons type="justify-start lg:justify-end" no-wrap>
                                 <BaseButton
                                 color="danger"
                                 :icon="mdiTrashCan"
                                 small
-                                @click="deleteUser(data.id)"
+                                @click="deleteJurusan(data.id)"
                                 />
                             </BaseButtons>
                         </div>
@@ -55,44 +62,39 @@
   </template>
   
   
- <script setup>
- import { createClient } from '@supabase/supabase-js';
- import {mdiTrashCan} from  "@mdi/js";
-const supabase = createClient("https://rayzvdjvanjqyjbcjsgs.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJheXp2ZGp2YW5qcXlqYmNqc2dzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5NzI5NDI5MywiZXhwIjoyMDEyODcwMjkzfQ.U2ai_fGQScASBnhMQkVh59Cik5AYrjbjw9jWbO2dn8U", {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-})
-const users = ref([])
-const loading = ref(false)
-// Access auth admin api
-const adminAuthClient = supabase.auth.admin
-const getUser = async ()=>{
+  <script setup>
+  import { mdiTrashCan,mdiEye } from '@mdi/js';
+  const supabase = useSupabaseClient()
+  const masukan = ref([])
+  const loading = ref(false)
+  const alert = ref(false)
+  const getJurusan = async ()=>{
     loading.value = false
-    const {data,error} = await adminAuthClient.listUsers()
+    const {data,error} = await supabase.from('jurusan').select('*').eq('is_delete',0)
+    .order('id', { ascending: false })
     if(error){
-        console.log(error)
+      console.log(error)
     }else{
-        users.value = data
-        loading.value = true
+      masukan.value = data
+      loading.value = true
     }
-}
-
-const deleteUser = async(id)=>{
-    // confirm
+  }
+  
+  const deleteJurusan = async(id)=>{
+     alert.value = false
+    // use confirm dialog
     const confirm = window.confirm('Are you sure?')
     if(confirm){
-        const {data,error} = await adminAuthClient.deleteUser(id)
-        if(error){
-            console.log(error)
-        }else{
-            getUser()
-        }
+        const {data,error} = await supabase.from('jurusan').update({is_delete:1}).eq('id',id)
+      if(error){
+        console.log(error)
+      }else{
+        alert.value = true
+        getJurusan()
+      }
     }
-
-}
-onMounted(()=>{
-    getUser()
-})  
-</script>
+  }
+  onMounted(()=>{
+    getJurusan()
+  })
+  </script>

@@ -3,12 +3,11 @@ definePageMeta({
   middleware: 'auth'
 })
 import {
-  mdiMonitorCellphone,
-  mdiTableBorder,
+  mdiBook,
   mdiChartTimelineVariant,
   mdiTrashCan,
   mdiAccountMultiple,
-  mdiCartOutline
+  mdiMail
 
 } from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
@@ -16,59 +15,35 @@ import NotificationBar from "@/components/NotificationBar.vue";
 
 import CardBox from "@/components/CardBox.vue";
 
-import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
-import BaseButton from "@/components/BaseButton.vue";
-import BaseButtons from "@/components/BaseButtons.vue";
+
+
 
 const supabase = useSupabaseClient();
 
-const user = useSupabaseUser()
-const transaksi = ref([])
+const ebook = ref([]);
 const chartData = ref([]);
-const mahasiswa  = ref([])
-const countMahasiswa = async ()=>{
-  const {data,error} = await supabase.from('mahasiswa').select('id')
-  mahasiswa.value = data
+const siswa  = ref([])
+const masukan = ref([])
+const countSiswa = async ()=>{
+  const {data,error} = await supabase.from('siswa').select('id')
+  siswa.value = data
 
 }
+ const countEbook = async ()=>{
+  const {data,error} = await supabase.from('ebook').select('id')
+  ebook.value = data
+ }
 
-const countTransaksi = async()=>{
-  // count total transaksi
-  const {data,error} = await supabase.from('payment').select('id')
-  transaksi.value = data
-}
+ const countMasukan = async ()=>{
+  const {data,error} = await supabase.from("masukan").select('id')
+  masukan.value = data
+ }
 
-const calcuateTotalBayarInEveryRoom = async()=>{
-  const {data,error} = await supabase.from('room_payment').select('id,nama_pembayaran')
-  if(error){
-    console.error(error)
-  }else{
-    const result = await Promise.all(data.map(async(item)=>{
-      const {data,error} = await supabase.from('payment').select('total_bayar').eq('payment_id',item.id)
-      if(error){
-        console.error(error)
-      }else{
-        const total = data.reduce((acc,curr)=>acc+curr.total_bayar,0)
-        return {
-          ...item,
-          total_bayar: total
-        }
-      }
-    }))
-    // format total bayar to rupiah
-    result.forEach((item)=>{
-      item.total_bayar = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(item.total_bayar)
-    })
-    
-    chartData.value = result
-    console.log(result)
-  }
-}
+
 onMounted(()=>{
-  countMahasiswa()
-  countTransaksi()
-
-  calcuateTotalBayarInEveryRoom()
+  countSiswa()
+  countEbook()
+  countMasukan()
 })
 
 </script>
@@ -92,28 +67,28 @@ onMounted(()=>{
             trend-type="up"
             color="text-emerald-500"
             :icon="mdiAccountMultiple"
-            :number="mahasiswa.length"
-            label="Mahasiswa"
+            :number="siswa.length"
+            label="Siswa"
             class="border border-slate-200"
           />
           <CardBoxWidget
             trend="12%"
             trend-type="down"
             color="text-blue-500"
-            :icon="mdiCartOutline"
-            :number="transaksi.length"
+            :icon="mdiBook"
+            :number="ebook.length"
             prefix=""
-            label="Transaksi"
+            label="Ebook"
             class="border border-slate-200"
           />
           <CardBoxWidget
-            trend="Overflow"
+            trend="jumlah masukan"
             trend-type="alert"
             color="text-red-500"
-            :icon="mdiChartTimelineVariant"
-            :number="256"
-            suffix="%"
-            label="Performance"
+            :icon="mdiMail"
+            :number="masukan.length"
+           
+            label="Masukan"
             class="border border-slate-200"
           />
         </div>
